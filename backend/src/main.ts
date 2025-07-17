@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { NestFactory } from '@nestjs/core'
+
+import { NestFactory, HttpAdapterHost } from '@nestjs/core'
 import { AppModule } from './app.module'
 import swaggerExtension from './api/extensions/swagger'
 import { Logger } from '@nestjs/common'
-import { LoggerExtension } from './infrastructure/extensions/logger/logger.extension'
+import { HttpExceptionFilter } from './api/common/filters/http-exception.filter'
+import { GlobalExceptionFilter } from './api/common/filters/global-exception.filter'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -11,11 +13,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   })
+  const httpAdapter = app.get(HttpAdapterHost)
 
   // Set global prefix
   app.setGlobalPrefix('api/v1')
 
-  app.useLogger(app.get(LoggerExtension))
+  // Global filters
+  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter), new HttpExceptionFilter(httpAdapter))
 
   // Swagger extension
   swaggerExtension(app)
