@@ -17,9 +17,9 @@ export class LoggerMiddleware implements NestMiddleware {
 
       // Use appropriate log level based on status code
       if (statusCode >= 400) {
-        this.logger.error(`${method} ${originalUrl} ${statusCode} - ${userAgent} ${ip} - duration:${duration / 1000}s`)
+        this.logger.error(`${method} ${originalUrl} ${statusCode} - ${userAgent} ${ip} - duration:${duration}ms`)
       } else {
-        this.logger.log(`${method} ${originalUrl} ${statusCode} - ${userAgent} ${ip} - duration:${duration / 1000}s`)
+        this.logger.log(`${method} ${originalUrl} ${statusCode} - ${userAgent} ${ip} - duration:${duration}ms`)
       }
     })
 

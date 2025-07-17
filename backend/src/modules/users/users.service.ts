@@ -14,10 +14,10 @@ export class UsersService {
   }
 
   findAll() {
-    this.logger.warn('About to return users!')
+    // this.logger.warn('About to return users!')
 
-    throw new Error('test')
-    throw new BadRequestException('test')
+    // throw new Error('test')
+    // throw new BadRequestException('test')
 
     return 'This action returns all users'
   }

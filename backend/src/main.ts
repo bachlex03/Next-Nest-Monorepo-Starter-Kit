@@ -7,6 +7,7 @@ import { Logger } from '@nestjs/common'
 import { HttpExceptionFilter } from './api/common/filters/http-exception.filter'
 import { GlobalExceptionFilter } from './api/common/filters/global-exception.filter'
 import helmet from 'helmet'
+import { TimeExecutingInterceptor } from './api/common/interceptors/time-executing.interceptor'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -15,6 +16,8 @@ async function bootstrap() {
     bufferLogs: true,
   })
   const httpAdapter = app.get(HttpAdapterHost)
+
+  const isDevelopment = true
 
   // Enable CORS
   app.enableCors({
@@ -28,7 +31,12 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1')
 
   // Global filters
-  // app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter), new HttpExceptionFilter(httpAdapter))
+  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter), new HttpExceptionFilter(httpAdapter))
+
+  // Global interceptors
+  if (isDevelopment) {
+    app.useGlobalInterceptors(new TimeExecutingInterceptor())
+  }
 
   // Swagger extension
   swaggerExtension(app)
