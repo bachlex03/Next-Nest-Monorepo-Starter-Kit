@@ -14,7 +14,9 @@ export class UsersController {
 
   @Get()
   findAll() {
-    return this.usersService.findAll()
+    const result = this.usersService.findAll()
+
+    return result
   }
 
   @Get(':id')
