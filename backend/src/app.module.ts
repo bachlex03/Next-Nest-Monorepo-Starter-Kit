@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { EmrFormModule } from './modules/emr-form/emr-form.module'
 import { UsersModule } from './modules/users/users.module'
 import { LoggerMiddleware } from './api/common/middlewares/logger.middleware'
 import { LoggerExtensionModule } from './infrastructure/extensions/logger/logger.module'
@@ -18,7 +17,6 @@ import { APP_GUARD } from '@nestjs/core'
     }),
 
     // Application modules
-    EmrFormModule,
     UsersModule,
   ],
   controllers: [AppController],

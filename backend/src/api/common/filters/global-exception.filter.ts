@@ -28,6 +28,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       title: exception instanceof HttpException ? exception.constructor.name : 'InternalServerError',
       statusCode: status,
       message: message,
+      errors: null,
       path: request.url,
       method: request.method,
       traceId: traceId,

@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
+import helmet from 'helmet'
 import { NestFactory, HttpAdapterHost } from '@nestjs/core'
+import { Logger } from '@nestjs/common'
 import { AppModule } from './app.module'
 import swaggerExtension from './api/extensions/swagger'
-import { Logger } from '@nestjs/common'
 import { HttpExceptionFilter } from './api/common/filters/http-exception.filter'
 import { GlobalExceptionFilter } from './api/common/filters/global-exception.filter'
-import helmet from 'helmet'
 import { TimeExecutingInterceptor } from './api/common/interceptors/time-executing.interceptor'
+import { DtoValidationPine } from './api/common/pipes/dto-validation.pipe'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -29,6 +30,9 @@ async function bootstrap() {
 
   // Set global prefix
   app.setGlobalPrefix('api/v1')
+
+  // Global validation pipe - using custom validation for better error responses
+  app.useGlobalPipes(new DtoValidationPine())
 
   // Global filters
   app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter), new HttpExceptionFilter(httpAdapter))
