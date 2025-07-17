@@ -6,6 +6,7 @@ import swaggerExtension from './api/extensions/swagger'
 import { Logger } from '@nestjs/common'
 import { HttpExceptionFilter } from './api/common/filters/http-exception.filter'
 import { GlobalExceptionFilter } from './api/common/filters/global-exception.filter'
+import helmet from 'helmet'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -15,11 +16,19 @@ async function bootstrap() {
   })
   const httpAdapter = app.get(HttpAdapterHost)
 
+  // Enable CORS
+  app.enableCors({
+    origin: '*',
+  })
+
+  // Enable Helmet
+  app.use(helmet())
+
   // Set global prefix
   app.setGlobalPrefix('api/v1')
 
   // Global filters
-  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter), new HttpExceptionFilter(httpAdapter))
+  // app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter), new HttpExceptionFilter(httpAdapter))
 
   // Swagger extension
   swaggerExtension(app)
