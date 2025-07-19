@@ -7,12 +7,21 @@ import { LoggerExtensionModule } from './infrastructure/extensions/logger/logger
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { RateLimitingFactory } from './api/extensions/rate-limiting'
 import { APP_GUARD } from '@nestjs/core'
-import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module'
+import { ConfigModule } from '@nestjs/config'
+import { configuration } from './infrastructure/config/env/env.config'
+import { envValidationSchema } from './infrastructure/config/env/validation'
 
 @Module({
   imports: [
     // Infrastructure modules
     LoggerExtensionModule,
+    ConfigModule.forRoot({
+      envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
+      load: [configuration],
+      isGlobal: true,
+      validationSchema: envValidationSchema,
+    }),
     ThrottlerModule.forRootAsync({
       useClass: RateLimitingFactory,
     }),

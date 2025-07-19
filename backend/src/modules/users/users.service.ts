@@ -4,10 +4,13 @@ import { LoggerExtension } from 'src/infrastructure/extensions/logger/logger.ext
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly logger: LoggerExtension) {}
+  constructor(private readonly logger: LoggerExtension) {
+    logger.setContext(UsersService.name)
+  }
 
   create(dto: CreateUserDto) {
     // throw new BadRequestException('test')
+    this.logger.debug('create user')
 
     return 'This action adds a new user'
   }

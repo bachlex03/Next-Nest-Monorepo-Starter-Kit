@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
-import helmet from 'helmet'
 import { NestFactory, HttpAdapterHost } from '@nestjs/core'
+import helmet from 'helmet'
+import * as compression from 'compression'
 import { Logger } from '@nestjs/common'
 import { AppModule } from './app.module'
 import swaggerExtension from './api/extensions/swagger'
@@ -9,6 +10,7 @@ import { HttpExceptionFilter } from './api/common/filters/http-exception.filter'
 import { GlobalExceptionFilter } from './api/common/filters/global-exception.filter'
 import { TimeExecutingInterceptor } from './api/common/interceptors/time-executing.interceptor'
 import { DtoValidationPine } from './api/common/pipes/dto-validation.pipe'
+import { PayloadLoggingPipe } from './api/common/pipes/payload-logging.pipe'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -24,9 +26,11 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   })
-
   // Enable Helmet
   app.use(helmet())
+
+  // Compression reduce the size of the response body and increase the speed of a web app
+  app.use(compression())
 
   // Set global prefix
   app.setGlobalPrefix('api/v1')
@@ -39,16 +43,21 @@ async function bootstrap() {
 
   // Global interceptors
   if (isDevelopment) {
+    app.useGlobalPipes(new PayloadLoggingPipe())
     app.useGlobalInterceptors(new TimeExecutingInterceptor())
   }
 
   // Swagger extension
   swaggerExtension(app)
 
-  const port = process.env.PORT ?? 3000
-  await app.listen(port)
+  await app.listen(process.env.PORT as string)
 
-  logger.log(`Application running on port ${port}`)
+  logger.debug(`🚀 This application is running on: ${await app.getUrl()}`)
+  logger.debug(`📚 This application is running on: ${await app.getUrl()}/api-docs`)
+  logger.debug(`🔧 This application is running on: ${process.env.NODE_ENV}`)
 }
 
-bootstrap()
+bootstrap().catch((error) => {
+  console.error('Failed to start application:', error)
+  process.exit(1)
+})
