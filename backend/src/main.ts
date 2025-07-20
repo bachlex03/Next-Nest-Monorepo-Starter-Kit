@@ -20,7 +20,7 @@ async function bootstrap() {
   })
   const httpAdapter = app.get(HttpAdapterHost)
 
-  const isDevelopment = true
+  const isDevelopment = process.env.NODE_ENV === 'development'
 
   // Enable CORS
   app.enableCors({
@@ -53,8 +53,8 @@ async function bootstrap() {
   await app.listen(process.env.PORT as string)
 
   logger.debug(`🚀 This application is running on: ${await app.getUrl()}`)
-  logger.debug(`📚 This application is running on: ${await app.getUrl()}/api-docs`)
-  logger.debug(`🔧 This application is running on: ${process.env.NODE_ENV}`)
+  logger.debug(`📚 Swagger documentation: ${await app.getUrl()}/api-docs`)
+  logger.debug(`🔧 Environment: ${process.env.NODE_ENV}`)
 }
 
 bootstrap().catch((error) => {
