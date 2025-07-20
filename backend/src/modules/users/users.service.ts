@@ -19,4 +19,8 @@ export class UsersService {
   async findByEmail(email: string) {
     return 'email'
   }
+
+  async getProfile(id: string) {
+    return `profile: ${id}`
+  }
 }
