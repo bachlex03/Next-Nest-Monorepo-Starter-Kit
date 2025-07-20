@@ -1,16 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { APP_GUARD } from '@nestjs/core'
+import { ConfigModule } from '@nestjs/config'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { UsersModule } from './modules/users/users.module'
 import { LoggerMiddleware } from './api/common/middlewares/logger.middleware'
-import { LoggerExtensionModule } from './infrastructure/extensions/logger/logger.module'
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
-import { RateLimitingFactory } from './api/extensions/rate-limiting'
-import { APP_GUARD } from '@nestjs/core'
-import { AuthModule } from './modules/auth/auth.module'
-import { ConfigModule } from '@nestjs/config'
-import { configuration } from './infrastructure/config/env/env.config'
-import { envValidationSchema } from './infrastructure/config/env/validation'
+import { LoggerExtensionModule } from 'src/infrastructure/extensions/logger/logger.module'
+import { RateLimitingFactory } from 'src/api/extensions/rate-limiting'
+import { UsersModule } from 'src/modules/users/users.module'
+import { AuthModule } from 'src/modules/auth/auth.module'
+import { configuration } from 'src/infrastructure/configs/env/env.config'
+import { envValidationSchema } from 'src/infrastructure/configs/env/validation'
 
 @Module({
   imports: [

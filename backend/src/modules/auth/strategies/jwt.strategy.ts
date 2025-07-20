@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
+import { ConfigType } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { AuthJwtPayload } from 'src/domain/core/types/auth-jwtpayload'
 import { Request } from 'express'
-import { AuthService } from '../auth.service'
+
+import { JwtPayload } from 'src/domain/core/types/jwt-payload'
+import { AuthService } from 'src/modules/auth/auth.service'
+import AccessTokenJwtConfig from 'src/infrastructure/configs/jwt/at-jwt.config'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authService: AuthService) {
+  constructor(
+    @Inject(AccessTokenJwtConfig.KEY)
+    private readonly accessTokenConfig: ConfigType<typeof AccessTokenJwtConfig>,
+    private readonly authService: AuthService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'secret',
+      secretOrKey: accessTokenConfig.secret,
       ignoreExpiration: false,
-      passReqToCallback: true,
     })
   }
 
-  validate(req: Request, payload: AuthJwtPayload) {
-    const refreshToken = req.get('authorization')?.replace('Bearer', '').trim() || ''
+  validate(payload: JwtPayload) {
+    const userId = payload.userId
 
-    const userId = payload.id
-
-    return this.authService.validateRefreshToken(userId, refreshToken)
+    return this.authService.validateJwtUser(userId)
   }
 }
+
+/**
+ * default name: 'jwt'
+ * 'jwt' used for @UseGuards(JwtAuthGuard)
+ */

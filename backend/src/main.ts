@@ -4,13 +4,14 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core'
 import helmet from 'helmet'
 import * as compression from 'compression'
 import { Logger } from '@nestjs/common'
-import { AppModule } from './app.module'
-import swaggerExtension from './api/extensions/swagger'
-import { HttpExceptionFilter } from './api/common/filters/http-exception.filter'
-import { GlobalExceptionFilter } from './api/common/filters/global-exception.filter'
-import { TimeExecutingInterceptor } from './api/common/interceptors/time-executing.interceptor'
-import { DtoValidationPine } from './api/common/pipes/dto-validation.pipe'
-import { PayloadLoggingPipe } from './api/common/pipes/payload-logging.pipe'
+
+import { AppModule } from 'src/app.module'
+import swaggerExtension from 'src/api/extensions/swagger'
+import { HttpExceptionFilter } from 'src/api/common/filters/http-exception.filter'
+import { GlobalExceptionFilter } from 'src/api/common/filters/global-exception.filter'
+import { TimeExecutingInterceptor } from 'src/api/common/interceptors/time-executing.interceptor'
+import { DtoValidationPine } from 'src/api/common/pipes/dto-validation.pipe'
+import { PayloadLoggingPipe } from 'src/api/common/pipes/payload-logging.pipe'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')

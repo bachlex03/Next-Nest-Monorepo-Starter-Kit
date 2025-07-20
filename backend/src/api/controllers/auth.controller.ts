@@ -1,9 +1,11 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common'
-import { AuthService } from '../../modules/auth/auth.service'
-import { LoginDto } from '../dtos/auth/login.dto'
-import { LocalAuthGuard } from '../common/guards/local-auth.guard'
-import { RefreshAuthGuard } from '../common/guards/refresh-auth.guard'
-import { Public } from '../common/decorators/public.decorator'
+
+import { AuthService } from 'src/modules/auth/auth.service'
+import { LoginDto } from 'src/api/dtos/auth/login.dto'
+import { Public } from 'src/api/common/decorators/public.decorator'
+import { LocalAuthGuard } from 'src/api/common/guards/local-auth.guard'
+import { RefreshAuthGuard } from 'src/api/common/guards/refresh-auth.guard'
+import { ApiBearerAuth } from '@nestjs/swagger'
 
 @Controller('auth')
 export class AuthController {
@@ -14,23 +16,23 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req, @Body() dto: LoginDto) {
-    const tokenPair = this.authService.login()
-
-    return {
-      id: req.user,
-      accessToken: tokenPair,
-    }
+    console.log('login', req.user)
+    return this.authService.login()
   }
 
-  @UseGuards(RefreshAuthGuard)
+  @ApiBearerAuth()
   @Post('logout')
   async logout(@Req() req) {
-    return this.authService.logout(req.user.id)
+    console.log('logout', req.user)
+    return this.authService.logout()
   }
 
   @UseGuards(RefreshAuthGuard)
+  @Public() // skip JwtAuthGuard
+  @ApiBearerAuth()
   @Post('refresh')
   async refresh(@Req() req) {
-    return this.authService.refreshToken(req.user.id)
+    console.log('refresh', req.user)
+    return this.authService.refreshToken()
   }
 }

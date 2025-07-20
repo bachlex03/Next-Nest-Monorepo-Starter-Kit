@@ -1,39 +1,43 @@
 import { Module } from '@nestjs/common'
-import { AuthService } from './auth.service'
-import { AuthController } from '../../api/controllers/auth.controller'
-import { LocalStrategy } from './strategies/local.strategy'
-import { JwtModule } from '@nestjs/jwt'
-import jwtConfig from 'src/infrastructure/configs/jwt/jwt.config'
-import { JwtStrategy } from './strategies/jwt.strategy'
-import refreshJwtConfig from 'src/infrastructure/configs/jwt/refresh-jwt.config'
-import { ConfigModule } from '@nestjs/config'
-import { RefreshStrategy } from './strategies/refresh.strategy'
+import { PassportModule } from '@nestjs/passport'
 import { APP_GUARD } from '@nestjs/core'
+import { JwtModule } from '@nestjs/jwt'
+import { ConfigModule } from '@nestjs/config'
+
 import { JwtAuthGuard } from 'src/api/common/guards/jwt-auth.guard'
 import { RolesGuard } from 'src/api/common/guards/roles.guard'
+import AccessTokenJwtConfig from 'src/infrastructure/configs/jwt/at-jwt.config'
+import RefreshTokenJwtConfig from 'src/infrastructure/configs/jwt/rt-jwt.config'
+import { AuthController } from 'src/api/controllers/auth.controller'
+import { AuthService } from './auth.service'
+import { LocalStrategy } from './strategies/local.strategy'
+import { JwtStrategy } from './strategies/jwt.strategy'
+import { RefreshStrategy } from './strategies/refresh.strategy'
 
 @Module({
   imports: [
-    JwtModule.registerAsync(jwtConfig.asProvider()),
-    ConfigModule.forFeature(jwtConfig),
-    ConfigModule.forFeature(refreshJwtConfig),
+    JwtModule.registerAsync(AccessTokenJwtConfig.asProvider()),
+    ConfigModule.forFeature(AccessTokenJwtConfig),
+    ConfigModule.forFeature(RefreshTokenJwtConfig),
+    PassportModule,
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
+    // Passport Strategies
     LocalStrategy,
     JwtStrategy,
     RefreshStrategy,
     // order matters: JwtAuthGuard must be before RolesGuard
     {
-      // order: 1
+      // order must be 1
       provide: APP_GUARD,
       useClass: JwtAuthGuard, // Apply @UseGuards(JwtAuthGuard) to all routes
     },
     {
-      // order: 2
+      // order must be 2
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: RolesGuard, // Apply @UseGuards(RolesGuard) to all routes
     },
   ],
 })
