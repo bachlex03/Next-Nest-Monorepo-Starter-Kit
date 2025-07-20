@@ -3,11 +3,13 @@ import { AuthService } from '../../modules/auth/auth.service'
 import { LoginDto } from '../dtos/auth/login.dto'
 import { LocalAuthGuard } from '../common/guards/local-auth.guard'
 import { RefreshAuthGuard } from '../common/guards/refresh-auth.guard'
+import { Public } from '../common/decorators/public.decorator'
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -18,6 +20,12 @@ export class AuthController {
       id: req.user,
       accessToken: tokenPair,
     }
+  }
+
+  @UseGuards(RefreshAuthGuard)
+  @Post('logout')
+  async logout(@Req() req) {
+    return this.authService.logout(req.user.id)
   }
 
   @UseGuards(RefreshAuthGuard)

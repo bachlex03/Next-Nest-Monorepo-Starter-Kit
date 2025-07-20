@@ -2,6 +2,8 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
 import { Observable } from 'rxjs'
+import { ROLES_KEY } from '../decorators/roles.decorator'
+import { Role } from 'src/domain/core/enums/role.enum'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -10,7 +12,18 @@ export class RolesGuard implements CanActivate {
     private jwtService: JwtService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    throw new Error('Method not implemented.')
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ])
+
+    if (!requiredRoles) return true
+
+    const user = context.switchToHttp().getRequest().user
+
+    const hasRequiredRoles = requiredRoles.some((role) => user.roles?.includes(role))
+
+    return hasRequiredRoles
   }
 }
