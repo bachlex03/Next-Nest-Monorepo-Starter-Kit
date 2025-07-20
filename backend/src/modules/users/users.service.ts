@@ -11,4 +11,12 @@ export class UsersService {
 
     return 'This action adds a new user'
   }
+
+  async findById(id: string) {
+    return 'id'
+  }
+
+  async findByEmail(email: string) {
+    return 'email'
+  }
 }

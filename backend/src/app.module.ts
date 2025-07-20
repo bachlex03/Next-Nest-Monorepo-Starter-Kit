@@ -7,6 +7,7 @@ import { LoggerExtensionModule } from './infrastructure/extensions/logger/logger
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { RateLimitingFactory } from './api/extensions/rate-limiting'
 import { APP_GUARD } from '@nestjs/core'
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,8 @@ import { APP_GUARD } from '@nestjs/core'
 
     // Application modules
     UsersModule,
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
