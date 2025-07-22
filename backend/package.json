@@ -17,7 +17,15 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migrate:dev": "dotenv -e .env.development prisma migrate dev",
+    "prisma:migrate": "dotenv -e .env.development npx prisma migrate dev --create-only",
+    "prisma:apply": "dotenv -e .env.development npx prisma migrate dev",
+    "prisma:reset": "dotenv -e .env.development npx prisma migrate reset",
+    "prisma:studio": "dotenv -e .env.development npx prisma studio"
+  },
+  "prisma": {
+    "schema": "src/infrastructure/persistence/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -30,17 +38,20 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/throttler": "^6.4.0",
+    "@prisma/client": "^6.12.0",
     "argon2": "^0.43.1",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "compression": "^1.8.1",
     "dotenv": "^17.2.0",
+    "dotenv-cli": "^8.0.0",
     "helmet": "^8.1.0",
     "joi": "^17.13.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "prisma": "^6.12.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
