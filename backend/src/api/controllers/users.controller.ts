@@ -2,20 +2,22 @@ import { Controller, Post, Body, BadRequestException, UseGuards, Req, Get } from
 import { CreateUserDto } from 'src/api/dtos/users/create-user.dto'
 import { UsersService } from 'src/modules/users/users.service'
 import { ApiBearerAuth } from '@nestjs/swagger'
+import { Public } from '../common/decorators/public.decorator'
 
 @Controller('users')
 @ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Req() req, @Body() dto: CreateUserDto) {
-    console.log('create', req.user)
-    return this.usersService.create(dto)
+  @Public()
+  @Get()
+  findAll() {
+    return this.usersService.findAll()
   }
 
-  @Get('profile')
-  getProfile(@Req() req) {
-    return this.usersService.getProfile(req.user.id)
-  }
+  // @Public()
+  // @Post()
+  // create(@Req() req, @Body() dto: CreateUserDto) {
+  //   return this.usersService.create(dto)
+  // }
 }

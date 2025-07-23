@@ -19,6 +19,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   })
+
+  const connectionString = `${process.env.DATABASE_URL}`
+  console.log(connectionString)
   const httpAdapter = app.get(HttpAdapterHost)
 
   const isDevelopment = process.env.NODE_ENV === 'development'

@@ -12,11 +12,11 @@ import { UsersModule } from 'src/modules/users/users.module'
 import { AuthModule } from 'src/modules/auth/auth.module'
 import { configuration } from 'src/infrastructure/configs/env/env.config'
 import { envValidationSchema } from 'src/infrastructure/configs/env/validation'
+import { PersistenceModule } from 'src/infrastructure/persistence/persistence.module'
 
 @Module({
   imports: [
     // Infrastructure modules
-    LoggerExtensionModule,
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
       load: [configuration],
@@ -26,11 +26,14 @@ import { envValidationSchema } from 'src/infrastructure/configs/env/validation'
     ThrottlerModule.forRootAsync({
       useClass: RateLimitingFactory,
     }),
+    LoggerExtensionModule,
 
     // Application modules
     UsersModule,
-
     AuthModule,
+
+    // Persistence modules
+    PersistenceModule,
   ],
   controllers: [AppController],
   providers: [

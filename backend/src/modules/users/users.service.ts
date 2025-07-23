@@ -1,28 +1,32 @@
 import { Injectable } from '@nestjs/common'
-import { CreateUserDto } from 'src/api/dtos/users/create-user.dto'
-import { LoggerExtension } from 'src/infrastructure/extensions/logger/logger.extension'
+import { User } from '@prisma/client'
 
+import { LoggerExtension } from 'src/infrastructure/extensions/logger/logger.extension'
+import UserRepository from 'src/infrastructure/persistence/repositories/user.repository'
 @Injectable()
 export class UsersService {
-  constructor(private readonly logger: LoggerExtension) {
+  constructor(
+    private readonly logger: LoggerExtension,
+    private readonly repository: UserRepository,
+  ) {
     logger.setContext(UsersService.name)
   }
 
-  create(dto: CreateUserDto) {
-    this.logger.debug('create user')
-
-    return 'This action adds a new user'
+  async findAll() {
+    return await this.repository.findAllByFilter({
+      where: {},
+    })
   }
 
-  async findById(id: string) {
-    return 'id'
-  }
+  // async create(dto: any) {
+  //   const newUser = {
+  //     email: 'lov3rinve146@gmail.com',
+  //     password: '123456',
+  //     fullName: 'John Doe',
+  //   } as User
 
-  async findByEmail(email: string) {
-    return 'email'
-  }
+  //   const result = await this.repository.create(newUser)
 
-  async getProfile(id: string) {
-    return `profile: ${id}`
-  }
+  //   return result
+  // }
 }
