@@ -13,6 +13,8 @@ import { AuthService } from './auth.service'
 import { LocalStrategy } from './strategies/local.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { RefreshStrategy } from './strategies/refresh.strategy'
+import { UsersModule } from '../users/users.module'
+import { TokenModule } from '../token/token.module'
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { RefreshStrategy } from './strategies/refresh.strategy'
     ConfigModule.forFeature(AccessTokenJwtConfig),
     ConfigModule.forFeature(RefreshTokenJwtConfig),
     PassportModule,
+    UsersModule,
+    TokenModule,
   ],
   controllers: [AuthController],
   providers: [

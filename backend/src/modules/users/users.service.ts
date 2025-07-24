@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { User } from '@prisma/client'
+import { CreateUserDto } from 'src/api/dtos/users/create-user.dto'
+import { UserEntity } from 'src/domain/entities/users.entity'
 
 import { LoggerExtension } from 'src/infrastructure/extensions/logger/logger.extension'
 import UserRepository from 'src/infrastructure/persistence/repositories/user.repository'
+import { TokenService } from '../token/token.service'
 @Injectable()
 export class UsersService {
   constructor(
@@ -18,15 +21,17 @@ export class UsersService {
     })
   }
 
-  // async create(dto: any) {
-  //   const newUser = {
-  //     email: 'lov3rinve146@gmail.com',
-  //     password: '123456',
-  //     fullName: 'John Doe',
-  //   } as User
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.repository.findUniqueByFilter({
+      where: {
+        email,
+      },
+    })
+  }
 
-  //   const result = await this.repository.create(newUser)
+  async create(entity: UserEntity): Promise<User> {
+    const result = await this.repository.create(entity)
 
-  //   return result
-  // }
+    return result
+  }
 }

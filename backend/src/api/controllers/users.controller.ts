@@ -14,10 +14,4 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll()
   }
-
-  // @Public()
-  // @Post()
-  // create(@Req() req, @Body() dto: CreateUserDto) {
-  //   return this.usersService.create(dto)
-  // }
 }

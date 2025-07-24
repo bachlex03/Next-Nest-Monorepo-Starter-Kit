@@ -8,10 +8,25 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  email         String   @unique
-  password      String
-  fullName      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid()) @db.VarChar(255)
+  email         String   @unique @db.VarChar(255)
+  password      String   @db.Text
+  firstName     String   @db.VarChar(255)
+  lastName      String   @db.VarChar(255)
+  createdAt DateTime? @default(now()) @db.Timestamp
+  updatedAt DateTime? @updatedAt @db.Timestamp
+
+  @@index([email])
+  @@map("users")
+}
+
+model Token {
+  userId String @db.VarChar(255)
+  refreshToken String? @db.Text
+  locked Boolean @default(false)
+  createdAt DateTime? @default(now()) @db.Timestamp
+  updatedAt DateTime? @updatedAt @db.Timestamp
+
+  @@id([userId])
+  @@map("tokens")
 }

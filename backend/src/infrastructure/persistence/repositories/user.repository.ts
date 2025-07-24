@@ -16,4 +16,12 @@ export default class UserRepository extends BaseRepository<User> {
       throw new Error(error)
     }
   }
+
+  async findUniqueByFilter(options: Prisma.UserFindUniqueArgs): Promise<User | null> {
+    try {
+      return await this.prisma.user.findUnique(options)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
 }

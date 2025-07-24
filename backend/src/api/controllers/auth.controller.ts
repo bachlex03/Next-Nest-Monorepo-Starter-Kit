@@ -6,6 +6,7 @@ import { Public } from 'src/api/common/decorators/public.decorator'
 import { LocalAuthGuard } from 'src/api/common/guards/local-auth.guard'
 import { RefreshAuthGuard } from 'src/api/common/guards/refresh-auth.guard'
 import { ApiBearerAuth } from '@nestjs/swagger'
+import { RegisterDto } from 'src/api/dtos/auth/register.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -15,24 +16,27 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req, @Body() dto: LoginDto) {
-    console.log('login', req.user)
-    return this.authService.login()
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto)
+  }
+
+  @Public()
+  @Post('register')
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto)
   }
 
   @ApiBearerAuth()
   @Post('logout')
-  async logout(@Req() req) {
-    console.log('logout', req.user)
-    return this.authService.logout()
+  logout(@Req() req) {
+    return this.authService.logout(req.user.userId)
   }
 
   @UseGuards(RefreshAuthGuard)
   @Public() // skip JwtAuthGuard
   @ApiBearerAuth()
   @Post('refresh')
-  async refresh(@Req() req) {
-    console.log('refresh', req.user)
-    return this.authService.refreshToken()
+  refresh(@Req() req) {
+    return this.authService.refreshToken(req.user.userId)
   }
 }
