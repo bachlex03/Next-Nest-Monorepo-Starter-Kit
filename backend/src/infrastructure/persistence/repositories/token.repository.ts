@@ -10,8 +10,10 @@ export default class TokenRepository extends BaseRepository<Token> {
   }
 
   async storeRefreshToken(userId: string, refreshToken: string) {
-    return await this.prisma.token.create({
-      data: { userId, refreshToken },
+    return await this.prisma.token.upsert({
+      where: { userId },
+      update: { refreshToken },
+      create: { userId, refreshToken },
     })
   }
 

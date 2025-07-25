@@ -7,6 +7,7 @@ import { LocalAuthGuard } from 'src/api/common/guards/local-auth.guard'
 import { RefreshAuthGuard } from 'src/api/common/guards/refresh-auth.guard'
 import { ApiBearerAuth } from '@nestjs/swagger'
 import { RegisterDto } from 'src/api/dtos/auth/register.dto'
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +30,7 @@ export class AuthController {
   @ApiBearerAuth()
   @Post('logout')
   logout(@Req() req) {
-    return this.authService.logout(req.user.userId)
+    return this.authService.logout(req.user.id)
   }
 
   @UseGuards(RefreshAuthGuard)
@@ -37,6 +38,6 @@ export class AuthController {
   @ApiBearerAuth()
   @Post('refresh')
   refresh(@Req() req) {
-    return this.authService.refreshToken(req.user.userId)
+    return this.authService.refreshToken(req.user.id)
   }
 }

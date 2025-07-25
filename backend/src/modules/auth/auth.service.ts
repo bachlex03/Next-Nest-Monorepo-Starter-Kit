@@ -10,6 +10,7 @@ import { UserEntity } from 'src/domain/entities/users.entity'
 import { UsersService } from '../users/users.service'
 import { TokenService } from '../token/token.service'
 import { LoginDto } from 'src/api/dtos/auth/login.dto'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -110,52 +111,50 @@ export class AuthService {
   }
 
   // Local Strategy
-  async validateUser(email: string, password: string) {
-    // const user = await this.userService.findByEmail(email)
+  async validateUser(email: string, password: string): Promise<Omit<User, 'password'>> {
+    const user = await this.userService.findByEmail(email)
 
-    // if (!user) throw new UnauthorizedException('User not found!')
+    if (!user) throw new UnauthorizedException('User not found!')
 
-    // const isPasswordMatch = await compare(password, user.password)
+    const isPasswordMatch = await bcrypt.compare(password, user.password)
 
-    // if (!isPasswordMatch) {
-    //   throw new UnauthorizedException('Invalid credentials')
-    // }
-
-    // return { id: user.id }
-    return {
-      test: 'Local Strategy',
+    if (!isPasswordMatch) {
+      throw new UnauthorizedException('Invalid credentials')
     }
+
+    const { password: _, ...userWithoutPassword } = user
+
+    return userWithoutPassword
   }
 
   // JWT Strategy
-  async validateJwtUser(userId: string) {
-    // const user = await this.userService.findOne(userId)
-    // if (!user) throw new UnauthorizedException('User not found!')
-    // const currentUser: CurrentUser = { id: user.id, role: user.role }
-    // return currentUser
+  async validateJwtUser(userId: string): Promise<Omit<User, 'password'>> {
+    const user = await this.userService.findById(userId)
 
-    return {
-      test: 'JWT Strategy',
-    }
+    if (!user) throw new UnauthorizedException('User not found!')
+
+    const { password: _, ...userWithoutPassword } = user
+
+    return userWithoutPassword
   }
 
   // Refresh Strategy
-  async validateRefreshToken(userId: string, refreshToken: string) {
-    // const user = await this.userService.findOne(userId);
-    // if (!user || !user.hashedRefreshToken)
-    //   throw new UnauthorizedException('Invalid Refresh Token');
+  async validateRefreshToken(userId: string, refreshToken: string): Promise<Omit<User, 'password'>> {
+    const user = await this.userService.findById(userId)
 
-    // const refreshTokenMatches = await argon2.verify(
-    //   user.hashedRefreshToken,
-    //   refreshToken,
-    // );
-    // if (!refreshTokenMatches)
-    //   throw new UnauthorizedException('Invalid Refresh Token');
+    if (!user) throw new UnauthorizedException('Invalid Refresh Token')
 
-    // return { id: userId };
-    return {
-      test: 'Refresh Strategy',
-    }
+    const rfToken = await this.tokenService.findByUserId(userId)
+
+    if (!rfToken || !rfToken.refreshToken) throw new UnauthorizedException('Invalid Refresh Token')
+
+    const isRefreshTokenValid = await argon2.verify(rfToken.refreshToken, refreshToken)
+
+    if (!isRefreshTokenValid) throw new UnauthorizedException('Invalid Refresh Token')
+
+    const { password: _, ...userWithoutPassword } = user
+
+    return userWithoutPassword
   }
 
   private async generateTokens(userId: string) {

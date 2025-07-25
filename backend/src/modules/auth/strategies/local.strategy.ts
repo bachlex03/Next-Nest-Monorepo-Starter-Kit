@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { Injectable } from '@nestjs/common'
 
 import { AuthService } from 'src/modules/auth/auth.service'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -12,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  validate(email: string, password: string): Promise<unknown> {
+  validate(email: string, password: string): Promise<Omit<User, 'password'>> {
     return this.authService.validateUser(email, password)
   }
 }

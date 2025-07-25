@@ -8,6 +8,7 @@ import { STRATEGY_NAME } from 'src/api/common/constants/strategy-name.constant'
 import { JwtPayload } from 'src/domain/core/types/jwt-payload'
 import RefreshTokenJwtConfig from 'src/infrastructure/configs/jwt/rt-jwt.config'
 import { AuthService } from 'src/modules/auth/auth.service'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, STRATEGY_NAME.REFRESH_JWT) {
@@ -23,10 +24,8 @@ export class RefreshStrategy extends PassportStrategy(Strategy, STRATEGY_NAME.RE
     })
   }
 
-  validate(req: Request, payload: JwtPayload) {
+  validate(req: Request, payload: JwtPayload): Promise<Omit<User, 'password'>> {
     const refreshToken = req.get('authorization')?.replace('Bearer', '').trim() || ''
-
-    console.log('refreshToken', refreshToken)
 
     const userId = payload.userId
 

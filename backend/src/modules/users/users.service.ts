@@ -29,6 +29,14 @@ export class UsersService {
     })
   }
 
+  async findById(id: string): Promise<User | null> {
+    return await this.repository.findUniqueByFilter({
+      where: {
+        id,
+      },
+    })
+  }
+
   async create(entity: UserEntity): Promise<User> {
     const result = await this.repository.create(entity)
 

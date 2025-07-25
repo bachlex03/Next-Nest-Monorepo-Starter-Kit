@@ -12,6 +12,10 @@ export class TokenService {
     logger.setContext(TokenService.name)
   }
 
+  async findByUserId(userId: string) {
+    return await this.tokenRepository.findByUserId(userId)
+  }
+
   async storeRefreshToken(userId: string, hashedRefreshToken: string) {
     const result = await this.tokenRepository.storeRefreshToken(userId, hashedRefreshToken)
 

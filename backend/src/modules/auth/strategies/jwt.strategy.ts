@@ -7,6 +7,7 @@ import { Request } from 'express'
 import { JwtPayload } from 'src/domain/core/types/jwt-payload'
 import { AuthService } from 'src/modules/auth/auth.service'
 import AccessTokenJwtConfig from 'src/infrastructure/configs/jwt/at-jwt.config'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -22,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  validate(payload: JwtPayload) {
+  validate(payload: JwtPayload): Promise<Omit<User, 'password'>> {
     const userId = payload.userId
 
     return this.authService.validateJwtUser(userId)
