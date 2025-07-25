@@ -17,9 +17,33 @@ export default class UserRepository extends BaseRepository<User> {
     }
   }
 
-  async findUniqueByFilter(options: Prisma.UserFindUniqueArgs): Promise<User | null> {
+  async findByEmailOrUsername(identifier: string): Promise<User | null> {
     try {
-      return await this.prisma.user.findUnique(options)
+      return await this.prisma.user.findFirst({
+        where: {
+          OR: [{ email: identifier }, { userName: identifier }],
+        },
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { email },
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  async findByUsername(userName: string): Promise<User | null> {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { userName },
+      })
     } catch (error) {
       throw new Error(error)
     }

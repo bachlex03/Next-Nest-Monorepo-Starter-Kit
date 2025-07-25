@@ -10,6 +10,7 @@ datasource db {
 model User {
   id            String   @id @default(cuid()) @db.VarChar(255)
   email         String   @unique @db.VarChar(255)
+  userName      String   @unique @db.VarChar(255)
   password      String   @db.Text
   firstName     String   @db.VarChar(255)
   lastName      String   @db.VarChar(255)
@@ -17,6 +18,7 @@ model User {
   updatedAt DateTime? @updatedAt @db.Timestamp
 
   @@index([email])
+  @@index([userName])
   @@map("users")
 }
 

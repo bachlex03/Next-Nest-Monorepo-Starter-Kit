@@ -6,6 +6,7 @@ export class UserEntity implements User {
   password: string
   firstName: string
   lastName: string
+  userName: string
   createdAt: Date
   updatedAt: Date
 

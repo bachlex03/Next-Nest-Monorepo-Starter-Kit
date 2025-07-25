@@ -18,15 +18,15 @@ export default abstract class BaseRepository<Entity> {
     }
   }
 
-  // async findById(id: string | number): Promise<Entity | null> {
-  //   try {
-  //     return await this.model.findUnique({
-  //       where: { id },
-  //     })
-  //   } catch (error) {
-  //     throw new Error(error)
-  //   }
-  // }
+  async findById(id: string | number): Promise<Entity | null> {
+    try {
+      return await this.model.findUnique({
+        where: { id },
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
 
   async create<T extends Partial<Entity>>(entity: T): Promise<Entity> {
     try {

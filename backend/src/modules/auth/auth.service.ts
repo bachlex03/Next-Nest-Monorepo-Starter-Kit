@@ -22,7 +22,7 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto) {
-    const user = await this.userService.findByEmail(dto.email)
+    const user = await this.userService.findByEmailOrUsername(dto.identifier)
 
     if (!user) {
       throw new UnauthorizedException('User not found!')
@@ -51,16 +51,23 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto): Promise<boolean> {
-    const isUserExist = await this.userService.findByEmail(dto.email)
+    const isUserExist = await this.userService.findByEmailOrUsername(dto.email)
 
     if (isUserExist) {
       throw new BadRequestException('User already exists')
+    }
+
+    // Check if username is already taken
+    const isUsernameTaken = await this.userService.findByUsername(dto.userName)
+    if (isUsernameTaken) {
+      throw new BadRequestException('Username already taken')
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 10)
 
     const newUser = UserEntity.toEntity({
       email: dto.email,
+      userName: dto.userName,
       password: hashedPassword,
       firstName: dto.firstName,
       lastName: dto.lastName,
