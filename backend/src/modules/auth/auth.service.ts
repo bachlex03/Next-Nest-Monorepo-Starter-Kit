@@ -164,6 +164,22 @@ export class AuthService {
     return userWithoutPassword
   }
 
+  // Google Strategy
+  async validateGoogleUser(googleProfile: { email: string; firstName: string; lastName: string; avatarUrl: string }) {
+    const user = await this.userService.findByEmail(googleProfile.email)
+    if (user) return user
+
+    const newUser = UserEntity.toEntity({
+      email: googleProfile.email,
+      userName: googleProfile.email,
+      password: '',
+      firstName: googleProfile.firstName,
+      lastName: googleProfile.lastName,
+    })
+
+    return await this.userService.create(newUser)
+  }
+
   private async generateTokens(userId: string) {
     const payload = {
       userId: userId,

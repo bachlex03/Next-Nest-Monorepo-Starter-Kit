@@ -8,6 +8,7 @@ import { JwtAuthGuard } from 'src/api/common/guards/jwt-auth.guard'
 import { RolesGuard } from 'src/api/common/guards/roles.guard'
 import AccessTokenJwtConfig from 'src/infrastructure/configs/jwt/at-jwt.config'
 import RefreshTokenJwtConfig from 'src/infrastructure/configs/jwt/rt-jwt.config'
+import GoogleOAuthConfig from 'src/infrastructure/configs/auth/google-oauth.config'
 import { AuthController } from 'src/api/controllers/auth.controller'
 import { AuthService } from './auth.service'
 import { LocalStrategy } from './strategies/local.strategy'
@@ -15,12 +16,14 @@ import { JwtStrategy } from './strategies/jwt.strategy'
 import { RefreshStrategy } from './strategies/refresh.strategy'
 import { UsersModule } from '../users/users.module'
 import { TokenModule } from '../token/token.module'
+import { GoogleStrategy } from './strategies/google.strategy'
 
 @Module({
   imports: [
     JwtModule.registerAsync(AccessTokenJwtConfig.asProvider()),
     ConfigModule.forFeature(AccessTokenJwtConfig),
     ConfigModule.forFeature(RefreshTokenJwtConfig),
+    ConfigModule.forFeature(GoogleOAuthConfig),
     PassportModule,
     UsersModule,
     TokenModule,
@@ -32,6 +35,7 @@ import { TokenModule } from '../token/token.module'
     LocalStrategy,
     JwtStrategy,
     RefreshStrategy,
+    GoogleStrategy,
     // order matters: JwtAuthGuard must be before RolesGuard
     {
       // order must be 1
