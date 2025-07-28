@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { User } from '@prisma/client'
 import { RegisterDto } from 'src/api/dtos/auth/register.dto'
+import { UserEntity } from 'src/domain/entities/user/users.entity'
 
 import { LoggerExtension } from 'src/infrastructure/extensions/logger/logger.extension'
 import UserRepository from 'src/infrastructure/persistence/repositories/user.repository'
@@ -19,7 +20,7 @@ export class UsersService {
     })
   }
 
-  async create(dto: RegisterDto): Promise<User> {
+  async create(dto: RegisterDto): Promise<UserEntity> {
     // Handle both CreateUserDto and registration data
     const data: Omit<User, 'id' | 'createdAt' | 'updatedAt'> = {
       email: dto.email,
@@ -30,7 +31,7 @@ export class UsersService {
     }
     // Create the user in the database
     const user = await this.repository.create(data)
-    return user
+    return UserEntity.toEntity(user)
   }
 
   async findByEmail(email: string): Promise<User | null> {

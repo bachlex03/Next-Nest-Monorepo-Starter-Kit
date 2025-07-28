@@ -1,14 +1,17 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
+import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs'
 import { BadRequestException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 
 import { UsersService } from 'src/modules/users/users.service'
 import { RegisterCommand } from './register.command'
-import { UserEntity } from 'src/domain/entities/users.entity'
+import { UserEntity } from 'src/domain/entities/user/users.entity'
 
 @CommandHandler(RegisterCommand)
 export class RegisterHandler implements ICommandHandler<RegisterCommand> {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private publisher: EventPublisher,
+  ) {}
 
   async execute(command: RegisterCommand): Promise<boolean> {
     const { dto } = command
@@ -39,6 +42,11 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
     if (!result) {
       throw new BadRequestException('Failed to create user')
     }
+
+    const user = this.publisher.mergeObjectContext(result)
+
+    // dispatch domain event
+    user.userCreated()
 
     return true
   }
