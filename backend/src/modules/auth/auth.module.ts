@@ -48,5 +48,6 @@ import { GoogleStrategy } from './strategies/google.strategy'
       useClass: RolesGuard, // Apply @UseGuards(RolesGuard) to all routes
     },
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -21,17 +21,11 @@ export class AuthService {
     @Inject(RefreshTokenJwtConfig.KEY) private refreshTokenConfig: ConfigType<typeof RefreshTokenJwtConfig>,
   ) {}
 
-  async login(dto: LoginDto) {
-    const user = await this.userService.findByEmailOrUsername(dto.identifier)
+  async googleLogin(email: string) {
+    const user = await this.userService.findByEmail(email)
 
     if (!user) {
       throw new UnauthorizedException('User not found!')
-    }
-
-    const isPasswordMatch = await bcrypt.compare(dto.password, user.password)
-
-    if (!isPasswordMatch) {
-      throw new UnauthorizedException('Invalid credentials')
     }
 
     const { accessToken, refreshToken } = await this.generateTokens(user.id)
@@ -48,52 +42,6 @@ export class AuthService {
       accessToken,
       refreshToken,
     }
-  }
-
-  async register(dto: RegisterDto): Promise<boolean> {
-    const isUserExist = await this.userService.findByEmailOrUsername(dto.email)
-
-    if (isUserExist) {
-      throw new BadRequestException('User already exists')
-    }
-
-    // Check if username is already taken
-    const isUsernameTaken = await this.userService.findByUsername(dto.userName)
-    if (isUsernameTaken) {
-      throw new BadRequestException('Username already taken')
-    }
-
-    const hashedPassword = await bcrypt.hash(dto.password, 10)
-
-    const newUser = UserEntity.toEntity({
-      email: dto.email,
-      userName: dto.userName,
-      password: hashedPassword,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-    })
-
-    const result = await this.userService.create(newUser)
-
-    if (!result) {
-      throw new BadRequestException('Failed to create user')
-    }
-
-    return true
-  }
-
-  async logout(userId: string | null) {
-    if (!userId) {
-      throw new BadRequestException('Invalid JWT')
-    }
-
-    const result = await this.tokenService.invalidateRefreshToken(userId)
-
-    if (!result) {
-      throw new BadRequestException('Failed to invalidate refresh token')
-    }
-
-    return true
   }
 
   async refreshToken(userId: string | null) {
@@ -180,7 +128,7 @@ export class AuthService {
     return await this.userService.create(newUser)
   }
 
-  private async generateTokens(userId: string) {
+  async generateTokens(userId: string) {
     const payload = {
       userId: userId,
     }

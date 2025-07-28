@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { User } from '@prisma/client'
 import { RegisterDto } from 'src/api/dtos/auth/register.dto'
-import { CreateUserDto } from 'src/api/dtos/users/create-user.dto'
 
 import { LoggerExtension } from 'src/infrastructure/extensions/logger/logger.extension'
 import UserRepository from 'src/infrastructure/persistence/repositories/user.repository'

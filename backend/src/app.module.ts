@@ -13,6 +13,7 @@ import { AuthModule } from 'src/modules/auth/auth.module'
 import { configuration } from 'src/infrastructure/configs/env/env.config'
 import { envValidationSchema } from 'src/infrastructure/configs/env/validation'
 import { PersistenceModule } from 'src/infrastructure/persistence/persistence.module'
+import { ApplicationModule } from './application/application.module'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PersistenceModule } from 'src/infrastructure/persistence/persistence.mo
     AuthModule,
 
     // Persistence modules
+    ApplicationModule,
     PersistenceModule,
   ],
   controllers: [AppController],
