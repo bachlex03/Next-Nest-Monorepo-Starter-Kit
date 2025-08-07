@@ -12,6 +12,8 @@ import { GlobalExceptionFilter } from 'src/api/common/filters/global-exception.f
 import { TimeExecutingInterceptor } from 'src/api/common/interceptors/time-executing.interceptor'
 import { DtoValidationPine } from 'src/api/common/pipes/dto-validation.pipe'
 import { PayloadLoggingPipe } from 'src/api/common/pipes/payload-logging.pipe'
+import { PrismaModule } from './infrastructure/persistence/prisma/prisma.module'
+import { Seeder } from './infrastructure/persistence/prisma/seeder'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -50,6 +52,24 @@ async function bootstrap() {
     app.useGlobalPipes(new PayloadLoggingPipe())
     app.useGlobalInterceptors(new TimeExecutingInterceptor())
   }
+
+  NestFactory.createApplicationContext(PrismaModule).then((appContext) => {
+    const seeder = appContext.get(Seeder)
+
+    seeder
+      .seed()
+      .then(() => {
+        logger.log('Database seeded successfully')
+      })
+      .catch((error) => {
+        logger.error('Error seeding database', error)
+
+        throw error
+      })
+      .finally(() => {
+        appContext.close()
+      })
+  })
 
   // Swagger extension
   swaggerExtension(app)

@@ -17,4 +17,6 @@
 - `yarn prisma:create`
 - `yarn prisma:migrate`
 
-### Seed data
+### Seed data (already auto seed in `src/main.ts`)
+
+`yarn prisma:seed`

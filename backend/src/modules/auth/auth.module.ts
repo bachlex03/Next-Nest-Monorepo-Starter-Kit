@@ -17,9 +17,11 @@ import { RefreshStrategy } from './strategies/refresh.strategy'
 import { UsersModule } from '../users/users.module'
 import { TokenModule } from '../token/token.module'
 import { GoogleStrategy } from './strategies/google.strategy'
+import { CqrsModule } from '@nestjs/cqrs'
 
 @Module({
   imports: [
+    CqrsModule,
     JwtModule.registerAsync(AccessTokenJwtConfig.asProvider()),
     ConfigModule.forFeature(AccessTokenJwtConfig),
     ConfigModule.forFeature(RefreshTokenJwtConfig),
