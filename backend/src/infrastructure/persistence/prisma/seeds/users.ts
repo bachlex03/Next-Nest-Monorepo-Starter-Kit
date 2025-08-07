@@ -1,6 +1,6 @@
 import { User } from '@prisma/client'
 
-export const users: Omit<User, 'id' | 'createdAt' | 'updatedAt'>[] = [
+export const userSeeds: Omit<User, 'id' | 'createdAt' | 'updatedAt'>[] = [
   {
     email: 'admin@example.com',
     userName: 'admin',
