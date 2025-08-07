@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule } from '@nestjs/config'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { CacheModule } from '@nestjs/cache-manager'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -14,6 +15,7 @@ import { configuration } from 'src/infrastructure/configs/env/env.config'
 import { envValidationSchema } from 'src/infrastructure/configs/env/validation'
 import { PersistenceModule } from 'src/infrastructure/persistence/persistence.module'
 import { ApplicationModule } from './application/application.module'
+import { redisOptions } from './infrastructure/configs/cache/redis.config'
 
 @Module({
   imports: [
@@ -30,12 +32,13 @@ import { ApplicationModule } from './application/application.module'
     LoggerExtensionModule,
 
     // Application modules
+    ApplicationModule,
     UsersModule,
     AuthModule,
 
     // Persistence modules
-    ApplicationModule,
     PersistenceModule,
+    CacheModule.registerAsync(redisOptions),
   ],
   controllers: [AppController],
   providers: [

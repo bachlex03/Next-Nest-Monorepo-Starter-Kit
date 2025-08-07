@@ -1,0 +1,9 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+**Read these documents by the order**:
+
+- `docs/launch-app.md`

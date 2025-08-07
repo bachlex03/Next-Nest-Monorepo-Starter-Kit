@@ -8,4 +8,6 @@ export const envValidationSchema = Joi.object({
   RT_JWT_SECRET: Joi.string().required(),
   RT_EXPIRE_IN: Joi.string().required(),
   DATABASE_URL: Joi.string().required(),
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PORT: Joi.number().required(),
 })
