@@ -1,1 +1,1 @@
-#
+# NextJS Starter Kit
