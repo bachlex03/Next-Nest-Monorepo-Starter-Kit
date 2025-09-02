@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import React from 'react'
-
+import { ThemeProvider } from 'next-themes'
 import { robotoMono } from '~/styles/fonts'
 import '~/styles/globals.css'
 
@@ -15,8 +15,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='vi'>
-      <body className={`${robotoMono.variable} font-roboto-mono`}>{children}</body>
+    <html lang='vi' suppressHydrationWarning>
+      <body className={`${robotoMono.variable} font-roboto-mono antialiased`} suppressHydrationWarning>
+        <ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
