@@ -3,6 +3,7 @@ import React from 'react'
 import { ThemeProvider } from 'next-themes'
 import { robotoMono } from '~/styles/fonts'
 import '~/styles/globals.css'
+import { ReduxProvider } from '~/infrastructure/redux/provider'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang='vi' suppressHydrationWarning>
       <body className={`${robotoMono.variable} font-roboto-mono antialiased`} suppressHydrationWarning>
-        <ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
+        <ReduxProvider>
+          <ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
+            {children}
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   )

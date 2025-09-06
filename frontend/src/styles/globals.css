@@ -2,7 +2,7 @@
 @plugin 'tailwindcss-animate';
 @plugin 'tailwindcss-motion';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 @custom-variant light (&:is(.light *));
 
 @layer base {
