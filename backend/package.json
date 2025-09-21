@@ -13,6 +13,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
     "lint": "eslint . --fix",
+    "prettier": "prettier --check \"src/**/(*.ts)\"",
+    "prettier:fix": "prettier --write \"src/**/(*.ts)\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
