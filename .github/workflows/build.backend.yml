@@ -6,11 +6,6 @@ on:
       - main
     paths:
       - "backend/**"
-  push:
-    branches:
-      - main
-    paths:
-      - "backend/**"
 
 env:
   REGISTRY: ghcr.io
@@ -27,7 +22,7 @@ jobs:
 
       - name: 📦 Build Backend
         run: |
-          docker build -f ./backend/Dockerfile.prod -t baledev/backend:latest
+          docker build -f ./backend/Dockerfile.prod -t baledev/backend:latest ./backend
 
       - name: 📦 Push Backend
         run: |
