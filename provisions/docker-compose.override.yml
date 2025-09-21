@@ -1,6 +1,5 @@
 services:
   postgres:
-    image: postgres
     restart: always
     env_file:
       - ../backend/.env.development
@@ -11,5 +10,13 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - app-network
+
 volumes:
   postgres:
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
