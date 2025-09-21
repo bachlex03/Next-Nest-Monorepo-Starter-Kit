@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { NestFactory, HttpAdapterHost } from '@nestjs/core'
 import helmet from 'helmet'
 import * as compression from 'compression'

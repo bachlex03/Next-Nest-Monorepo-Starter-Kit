@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import { ArgumentMetadata, BadRequestException, PipeTransform, ValidationError } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
