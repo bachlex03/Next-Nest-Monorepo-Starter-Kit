@@ -7,10 +7,13 @@ import eslintPluginPrettier from 'eslint-plugin-prettier'
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: ['eslint.config.mjs', 'dist/**/*', 'node_modules/**/*'],
+  },
+  {
+    files: ['src/**/*.ts', 'test/**/*.ts'],
   },
   eslint.configs.recommended,
-  // ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.recommended,
   eslintPluginPrettierRecommended,
   {
     languageOptions: {
